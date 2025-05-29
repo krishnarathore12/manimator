@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -158,12 +157,12 @@ function PromptInput({ prompt, setPrompt }: { prompt: string; setPrompt: (s: str
   return (
     <div className="w-full bg-card border border-border rounded-lg p-4 shadow-lg">
       <Input
-        type="text"
-        placeholder="A cool video about...."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        className="text-sm bg-transparent border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground h-auto pb-10"
-      />
+  type="text"
+  placeholder="A cool video about...."
+  value={prompt}
+  onChange={(e) => setPrompt(e.target.value)}
+  className="text-sm bg-transparent border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground h-auto pb-10"
+/>
       <Separator className="my-2 bg-border" />
       <div className="flex justify-between items-center pt-1">
         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
@@ -203,7 +202,7 @@ function ProjectsSection() {
     <section className="bg-card rounded-2xl p-6 md:p-8 my-12 md:my-16 shadow-xl">
       <div className="flex flex-col items-center gap-16">
         <div className="w-full">
-          <h2 className="text-lg font-medium text-slate-300 mb-6">My Projects</h2>
+          <h2 className="text-lg font-medium mb-6">My Projects</h2>
           <div className="flex flex-wrap gap-6">
             <ProjectCard name="Project Name" editedTime="Edited 3 days ago" />
             <Button
@@ -218,12 +217,12 @@ function ProjectsSection() {
         </div>
 
         <div className="w-full">
-          <h2 className="text-lg font-medium text-slate-300 mb-6">From the Community</h2>
+          <h2 className="text-lg font-medium mb-6">From the Community</h2>
           <CommunityProjectsGrid projectItems={projectItems} />
           <Button
             variant="outline"
             size="sm"
-            className="text-slate-500 border-slate-500 hover:text-slate-400 hover:border-slate-400"
+            className="text-muted-foreground border-border hover:text-foreground hover:border-foreground"
             onClick={() => console.log("Show More clicked")}
           >
             Show More
@@ -254,7 +253,7 @@ function Footer() {
     <footer className="border-t border-border py-14">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between gap-12">
         <div className="mb-10 md:mb-0">
-          <h3 className="text-2xl font-bold text-foreground mb-4 font-pixelify-sans">Manimator</h3>
+          <h3 className="text-2xl font-bold text-foreground mb-4"><span style={{ fontFamily: 'Pixelify Sans' }}>Manimator</span></h3>
           <div className="flex space-x-4">
             {[Github, Twitter, Linkedin].map((Icon, index) => (
               <a key={index} href="#" className="text-muted-foreground hover:text-foreground">
