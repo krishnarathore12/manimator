@@ -1,6 +1,7 @@
 "use client";
 // Prompt input section
 import { Input } from "@/components/ui/input";
+import { useLocation } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -53,11 +54,12 @@ function SearchBar() {
 
 // Style info box
 function InfoBox() {
+  const location = useLocation();
+  const initialPrompt = location.state?.prompt ?? "";
   return (
     <div className="flex justify-center items-center bg-muted rounded-[18px] px-4 py-2 h-[96px] w-4/5 ml-auto">
       <p className="text-xs text-muted-foreground text-left w-full">
-        Quis faucibus massa sit egestas sit fermentum<br />
-        Cras mi purus viverra vitae felis sit amet tincidunt fringi
+        {initialPrompt}
       </p>
     </div>
   );

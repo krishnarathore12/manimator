@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Sheet,
   SheetContent,
@@ -154,6 +156,14 @@ function HeroSection({ prompt, setPrompt }: { prompt: string; setPrompt: (s: str
   );
 }
 function PromptInput({ prompt, setPrompt }: { prompt: string; setPrompt: (s: string) => void }) {
+  const navigate = useNavigate();
+
+  const handleSend = () => {
+    if (!prompt.trim()) return;
+    const sessionId = uuidv4();
+    navigate(`/chat/${sessionId}`, { state: { prompt } });
+  };
+
   return (
     <div className="w-full bg-card border border-border rounded-lg p-4 shadow-lg">
       <Input
@@ -172,7 +182,7 @@ function PromptInput({ prompt, setPrompt }: { prompt: string; setPrompt: (s: str
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
             <Sparkles className="h-5 w-5" />
           </Button>
-          <Button variant="default" size="icon" onClick={() => console.log("Send clicked")}>
+          <Button variant="default" size="icon" onClick={handleSend}>
             <SendHorizonal className="h-5 w-5" />
           </Button>
         </div>
