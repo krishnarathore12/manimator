@@ -1,5 +1,7 @@
 # Manimator
 
+![Manimator Logo](./frontend/manimator/public/logo.svg)
+
 Manimator is a web application that uses AI agents to generate and edit Manim animations from natural language queries. It allows users to create Manim videos withoutwriting Manim code directly, by leveraging Large Language Models to understand instructions and generate the corresponding Manim Python scripts.
 
 ## Features
