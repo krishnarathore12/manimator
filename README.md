@@ -1,3 +1,4 @@
+https://github.com/user-attachments/assets/4be51a62-8681-479e-92b1-3b1a367e116b
 # Manimator: Automated Manim Animations
 Manimator is an AI-powered tool that automates the creation of animations using the Manim library. Manim, famously used by 3Blue1Brown, is a powerful Python library for generating precise mathematical animations. Manimator simplifies this process by allowing users to describe their desired animation in natural language, which an AI agent then translates into Manim code and renders into a video. This addresses the complexity and learning curve often associated with using Manim directly, making animation creation accessible to a broader audience, including educators, content creators, and students.
 
@@ -104,10 +105,6 @@ The UI aims to be intuitive, guiding the user through the process of creating an
 - `chat_page.png` (mockup of the main chat/animation interface)
 ![Image](https://github.com/user-attachments/assets/ef2cb3f7-4ccb-45b9-afc3-58460416d2d7)
 
-
-
-## Demo Video Link
-https://github.com/user-attachments/assets/4be51a62-8681-479e-92b1-3b1a367e116b
 
 ## Additional Notes
 Manimator leverages multiple AI agents, built using the Agno framework, each specialized for a part of the animation generation pipeline: decomposing user requests, writing initial Manim code, debugging errors, and applying user-requested updates. This modular agentic design, combined with tools that allow agents to search official Manim documentation and a curated dataset of Manim code examples (`Noxus09/manim-dataset` on Hugging Face [https://huggingface.co/datasets/Noxus09/manim-dataset](https://huggingface.co/datasets/Noxus09/manim-dataset)), allows for more robust and targeted AI assistance throughout the creative process. The RAG (Retrieval Augmented Generation) capabilities for accessing code examples are enhanced by embeddings (potentially from Together AI), and the knowledge base for RAG may be populated or updated using Firecrawl for web data extraction.
