@@ -1,5 +1,5 @@
 // App.tsx or ChatPage.tsx
-import React, { useState } from 'react'; // Import useState
+import { useState } from 'react'; // Import useState
 import './App.css';
 import ChatSidePanel from './SideChatBar';
 import MediaPreviewInterface from './VideoCanvas';
@@ -13,7 +13,7 @@ export default function ChatPage() {
 
 
   // 2. Function to update the video path, to be passed to ChatSidePanel
-  const handleVideoSelect = (newPath: string) => {
+  const handleVideoSelect = (newPath: string | null) => {
     setCurrentVideoPath(newPath);
   };
 

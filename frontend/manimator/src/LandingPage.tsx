@@ -309,7 +309,7 @@ function Footer() {
 // Main Page Component
 export default function ManimatorPage() {
   const [prompt, setPrompt] = useState("");
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [_showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">

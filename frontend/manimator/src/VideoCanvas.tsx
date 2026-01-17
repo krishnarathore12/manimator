@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Play, Plus } from "lucide-react";
-import React from 'react'; // Import React if not already
 import { API_BASE_URL } from './config';
 
 // Props for MediaPreviewInterface
