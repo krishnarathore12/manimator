@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Input } from "@/components/ui/input";
 import { useLocation } from "react-router-dom"; // Make sure react-router-dom is installed
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { API_BASE_URL } from './config';
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -245,11 +246,11 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
       if (previousManimCode) {
         // Use /update-animation endpoint
         const encodedManimCode = encodeURIComponent(previousManimCode);
-        url = `http://localhost:8000/update-animation?query=${encodedPrompt}&manim_code_input=${encodedManimCode}`;
+        url = `${API_BASE_URL}/update-animation?query=${encodedPrompt}&manim_code_input=${encodedManimCode}`;
         console.log("Calling /update-animation with:", { query: promptText, manim_code_input: previousManimCode });
       } else {
         // Use /generate-animation endpoint for initial creation
-        url = `http://localhost:8000/generate-animation?query=${encodedPrompt}`;
+        url = `${API_BASE_URL}/generate-animation?query=${encodedPrompt}`;
         console.log("Calling /generate-animation with:", { query: promptText });
       }
 

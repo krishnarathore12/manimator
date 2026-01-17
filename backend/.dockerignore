@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Test
+.pytest_cache/
+.coverage
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
+
+# Static videos (will be generated at runtime)
+static_videos/*.mp4

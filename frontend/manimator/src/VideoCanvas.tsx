@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Play, Plus } from "lucide-react";
 import React from 'react'; // Import React if not already
+import { API_BASE_URL } from './config';
 
 // Props for MediaPreviewInterface
 interface MediaPreviewInterfaceProps {
@@ -15,9 +16,8 @@ interface VideoPreviewProps {
   videoPath?: string | null;
 }
 
-// Define the base URL for your backend videos.
-// In a real application, this might come from an environment variable.
-const BACKEND_VIDEO_BASE_URL = "http://localhost:8000"; // As requested: localhost:8000
+// Use environment variable for backend URL
+const BACKEND_VIDEO_BASE_URL = API_BASE_URL;
 
 function HeaderBar() {
   return (

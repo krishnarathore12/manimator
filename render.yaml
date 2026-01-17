@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: manimator-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false # You'll set this in Render dashboard
+      - key: PORT
+        value: 8000
+    healthCheckPath: /docs

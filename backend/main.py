@@ -12,10 +12,13 @@ from utils import run_manim_code, extract_scene_class_name, clean_manim_code
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
+# Get allowed origins from environment variable, default to localhost for development
+# In production, set ALLOWED_ORIGINS env var to your frontend URL(s)
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
 
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=["http://localhost:5173"],  # or ["*"] in dev
+  allow_origins=allowed_origins,
   allow_credentials=True,
   allow_methods=["*"],
   allow_headers=["*"],
