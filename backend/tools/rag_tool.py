@@ -32,29 +32,47 @@ def get_code_example(query: str) -> list[dict]:
             - similarity (float): The cosine similarity score (0-1) to the query
             
     """
-    manim_csv = Path("/home/deb/usr/manimator/backend/data/manim_dataset_with_embeddings.csv")
-    df = pd.read_csv(manim_csv)
+    # Check if TOGETHER_API_KEY is available
+    together_api_key = os.getenv("TOGETHER_API_KEY")
+    if not together_api_key:
+        print("TOGETHER_API_KEY not set, skipping code example retrieval")
+        return []
+    
+    # Use relative path based on this file's location
+    current_dir = Path(__file__).parent.parent  # Go up to backend/
+    manim_csv = current_dir / "data" / "manim_dataset_with_embeddings.csv"
+    
+    # Check if file exists
+    if not manim_csv.exists():
+        print(f"Embeddings CSV file not found at {manim_csv}, skipping code example retrieval")
+        return []
+    
+    try:
+        df = pd.read_csv(manim_csv)
 
-    df['embeddings'] = df['embeddings'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
-    
-    embedder = TogetherEmbedder(api_key=os.getenv("TOGETHER_API_KEY"))
-    query_embd = np.array(embedder.get_embedding(query)).reshape(1, -1)
-    
-    df['similarity'] = df['embeddings'].apply(
-        lambda x: cosine_similarity([x], query_embd)[0][0] if x is not None else -1
-    )
+        df['embeddings'] = df['embeddings'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+        
+        embedder = TogetherEmbedder(api_key=together_api_key)
+        query_embd = np.array(embedder.get_embedding(query)).reshape(1, -1)
+        
+        df['similarity'] = df['embeddings'].apply(
+            lambda x: cosine_similarity([x], query_embd)[0][0] if x is not None else -1
+        )
 
-    top_results = df.sort_values('similarity', ascending=False).head(3)
-    
-    results = []
-    for _, row in top_results.iterrows():
-        results.append({
-            'code': row['Code'],
-            'prompt': row['prompt'],
-            'similarity': row['similarity']
-        })
-    
-    return results
+        top_results = df.sort_values('similarity', ascending=False).head(3)
+        
+        results = []
+        for _, row in top_results.iterrows():
+            results.append({
+                'code': row['Code'],
+                'prompt': row['prompt'],
+                'similarity': row['similarity']
+            })
+        
+        return results
+    except Exception as e:
+        print(f"Error in get_code_example: {e}")
+        return []
 
 def main():
 
