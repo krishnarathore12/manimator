@@ -8,6 +8,7 @@ from agents.code_agent import manim_agent
 from agents.debugger_agent import debugger_agent
 from agents.decompose_agent import animation_decomposer_agent
 from agents.updater_agent import updater_agent
+from agents.summary_agent import summary_agent
 from utils import run_manim_code, extract_scene_class_name, clean_manim_code
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
@@ -62,12 +63,17 @@ async def generate_animation(query: str):
                     break 
                 video_fs_path, stdout, stderr = run_manim_code(manim_code, temp_dir, scene_name)
                 if video_fs_path:
-                    video_url = f"{os.path.basename(video_fs_path)}"
+                    video_url = f"/videos/{os.path.basename(video_fs_path)}"
                     break
+
+        # Generate initial summary
+        summary_input = f"Previous Summary: None\nManim Code:\n{manim_code}"
+        summary = summary_agent.run(summary_input).content
 
         return {
             "manim_code": manim_code,
             "video_path": video_url, 
+            "summary": summary,
             "stdout": stdout,
             "stderr": stderr
         }
@@ -77,12 +83,12 @@ async def generate_animation(query: str):
 
 
 @app.get("/update-animation")
-async def update_animation(query: str, manim_code_input:str): 
+async def update_animation(query: str, manim_code_input:str, summary:str): 
     temp_dir = tempfile.mkdtemp()
     video_url = None 
     manim_code_to_return = manim_code_input 
     try:
-        enhanced_query = animation_decomposer_agent.run(query).content
+        enhanced_query = "Summary:"+ summary + "\nQuery:"+ animation_decomposer_agent.run(query).content
         updater_input = f"Query to make changes: {enhanced_query}\nManim code: {manim_code_input}"
         updated_manim_code_result = updater_agent.run(updater_input).content
         current_manim_code = clean_manim_code(updated_manim_code_result)
@@ -116,9 +122,14 @@ async def update_animation(query: str, manim_code_input:str):
                     video_url = f"/videos/{os.path.basename(video_fs_path)}"
                     break
         
+        # Update summary
+        summary_input = f"Previous Summary: {summary}\nManim Code:\n{current_manim_code}"
+        recent_summary = summary_agent.run(summary_input).content
+
         return {
             "manim_code": manim_code_to_return,
             "video_path": video_url, 
+            "summary": recent_summary,
             "stdout": stdout,
             "stderr": stderr
         }
