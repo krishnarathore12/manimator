@@ -19,6 +19,7 @@ import {
 interface ApiResponse {
   manim_code: string;
   video_path: string | null;
+  summary: string;
   stdout: string;
   stderr: string;
 }
@@ -27,6 +28,7 @@ interface Interaction {
   id: string;
   prompt: string;
   manimCode?: string;
+  summary?: string;
   stdout?: string;
   stderr?: string;
   videoPath?: string | null;
@@ -88,6 +90,7 @@ function InfoBox({ prompt }: { prompt: string }) {
 // ChatItem props
 interface ChatItemProps {
   manimCode?: string;
+  summary?: string;
   stdout?: string;
   stderr?: string;
   videoPath?: string | null;
@@ -96,7 +99,7 @@ interface ChatItemProps {
 }
 
 // Single chat item
-function ChatItem({ manimCode, stdout, stderr, videoPath, isLoading, error }: ChatItemProps) {
+function ChatItem({ manimCode, summary, stdout, stderr, videoPath, isLoading, error }: ChatItemProps) {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex justify-between items-center h-5">
@@ -122,13 +125,17 @@ function ChatItem({ manimCode, stdout, stderr, videoPath, isLoading, error }: Ch
 
         {!isLoading && !error && (
           <>
-            {/* Optional: Display videoPath info
-            {videoPath && (
-              <p className="text-xs text-green-600 dark:text-green-400 my-1">
-                Video available: {videoPath}
-              </p>
+            {summary && (
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 my-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" />
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">Animation Summary</p>
+                </div>
+                <p className="text-sm text-foreground/90 italic leading-relaxed">
+                  "{summary}"
+                </p>
+              </div>
             )}
-            */}
             {manimCode && (
               <div className="my-1">
                 <p className="text-xs font-semibold text-foreground mb-1">Manim Code:</p>
@@ -229,7 +236,8 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
   const fetchAnimationData = useCallback(async (
     interactionId: string,
     promptText: string,
-    previousManimCode?: string // Added to pass previous code for updates
+    previousManimCode?: string,
+    previousSummary?: string
   ) => {
     setInteractions(prev =>
       prev.map(item =>
@@ -246,8 +254,9 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
       if (previousManimCode) {
         // Use /update-animation endpoint
         const encodedManimCode = encodeURIComponent(previousManimCode);
-        url = `${API_BASE_URL}/update-animation?query=${encodedPrompt}&manim_code_input=${encodedManimCode}`;
-        console.log("Calling /update-animation with:", { query: promptText, manim_code_input: previousManimCode });
+        const encodedSummary = encodeURIComponent(previousSummary || "");
+        url = `${API_BASE_URL}/update-animation?query=${encodedPrompt}&manim_code_input=${encodedManimCode}&summary=${encodedSummary}`;
+        console.log("Calling /update-animation with:", { query: promptText, manim_code_input: previousManimCode, summary: previousSummary });
       } else {
         // Use /generate-animation endpoint for initial creation
         url = `${API_BASE_URL}/generate-animation?query=${encodedPrompt}`;
@@ -277,6 +286,7 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
             ? {
                 ...interaction,
                 manimCode: data.manim_code,
+                summary: data.summary,
                 stdout: data.stdout,
                 stderr: data.stderr,
                 videoPath: data.video_path,
@@ -316,12 +326,14 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
       const newInteractionId = `user-${Date.now()}`;
 
       let previousManimCode: string | undefined = undefined;
-      // Find the manimCode from the most recent successful interaction
+      let previousSummary: string | undefined = undefined;
+      // Find the manimCode and summary from the most recent successful interaction
       if (interactions.length > 0) {
         for (let i = interactions.length - 1; i >= 0; i--) {
           const lastInteraction = interactions[i];
           if (lastInteraction.manimCode && !lastInteraction.error) {
             previousManimCode = lastInteraction.manimCode;
+            previousSummary = lastInteraction.summary;
             break;
           }
         }
@@ -335,8 +347,8 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
           videoPath: null, // Initialize for the new interaction
         }
       ]);
-      // Pass previousManimCode if available, otherwise it's undefined (for initial generation)
-      fetchAnimationData(newInteractionId, promptText, previousManimCode);
+      // Pass previousManimCode and previousSummary if available (for updates)
+      fetchAnimationData(newInteractionId, promptText, previousManimCode, previousSummary);
     }
   };
 
@@ -355,6 +367,7 @@ export default function ChatSidePanel({ onVideoSelect }: ChatSidePanelProps) {
                 <ChatItem
                   isLoading={interaction.isLoading}
                   manimCode={interaction.manimCode}
+                  summary={interaction.summary}
                   stdout={interaction.stdout}
                   stderr={interaction.stderr}
                   videoPath={interaction.videoPath}
